@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.GoodsMapper">
+	<select
+		id="getGoodsByNew"
+		parameterType="Integer"
+		resultType="pojo.Goods">
+		select * from goods order by publishTime desc
+		limit #{value}
+	</select>
+
+	<select
+		id="getGoodsByGid"
+		parameterType="String"
+		resultType="pojo.Goods">
+		select * from goods where gid=#{value}
+	</select>
+
+	<update
+		id="addClickCount"
+		parameterType="String">
+		update goods set clickCount=clickCount+1
+		where gid=#{value}
+	</update>
+
+	<insert
+		id="publishGoods"
+		parameterType="pojo.Goods">
+		insert into goods
+		(userName,gid,goodName,goodSort,goodPrice,sellerTel,goodDesc,goodPicture0,goodPicture1,goodPicture2)
+		values
+		(#{userName},#{gid},#{goodName},#{goodSort},#{goodPrice},#{sellerTel},#{goodDesc},#{goodPicture0},#{goodPicture1},#{goodPicture2})
+	</insert>
+</mapper>
