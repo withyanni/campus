@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.UserMapper">
+
+	<select
+		id="usernameCanUse"
+		resultType="Integer"
+		parameterType="String">
+		select count(*) from user where
+		userName=#{value}
+	</select>
+
+	<insert
+		id="registUser"
+		parameterType="pojo.User">
+		insert into user
+		(username,userpassword,email,qq)
+		values(#{userName},#{userPassword},#{email},#{qq})
+	</insert>
+
+	<select
+		id="login"
+		parameterType="pojo.User"
+		resultType="pojo.User">
+		select * from user where userName=#{userName}
+		and
+		userPassword=#{userPassword}
+	</select>
+</mapper>
