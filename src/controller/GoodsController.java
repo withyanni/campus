@@ -1,11 +1,5 @@
 package controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +7,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import pojo.Goods;
 import pojo.Page;
-import pojo.User;
 import service.GoodsService;
+import service.UserService;
 import utils.campus;
-import utils.yanni;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author yanni
@@ -29,6 +25,8 @@ import utils.yanni;
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 根据发布时间降序获取某个区间商品，默认最新9个
@@ -49,7 +47,7 @@ public class GoodsController {
         if (count == null || count <= 0)
             count = 9;
         Page p = new Page(page, count);
-        List <Goods> goods = goodsService.getGoodsByNew(p);
+        List<Goods> goods = goodsService.getGoodsByNew(p);
         return new campus(200, goods);
     }
 
@@ -77,23 +75,24 @@ public class GoodsController {
      */
     @RequestMapping(value = "/publishGoods", method = RequestMethod.POST)
     @ResponseBody
-    public campus publishGoods(Goods goods, @RequestParam MultipartFile[] files)
+    public campus publishGoods(Goods goods, @RequestParam MultipartFile[] files, @RequestParam String token)
             throws Exception {
         HashMap<String, Boolean> map = goodsService.validate(goods);
         if (map.size() > 0) {
+            //参数有错误
             return new campus(400, map);
         }
-
-//		User user=(User)request.getSession().getAttribute("sessionUser");
-//		if(user==null||user.getUserName()==null)
-//			return new campus(403,"loginFirst");
-//		goods.setUserName(user.getUserName());
-        goods.setUserName("yanni");
+        String userName=userService.isLogined(token);
+        if(userName==null||userName.trim().equals(""))
+        {//未登录
+            return new campus(403,null);
+        }
+        goods.setUserName(userName);
         goods.setPublishTime(new Date());
         goods.setStatus(1);
         goods.setClickCount(0);
         goodsService.publishGoods(goods, files);
-        return new campus(200, null);
+        return new campus(200, null);//发布成功
     }
 
     /**

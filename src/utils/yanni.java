@@ -115,6 +115,10 @@ public class yanni
 		}
 	}
 
+	/**
+	 * 自动生成32位UUID字符串
+	 * @return
+	 */
 	public static String UUID()
 	{
 		return UUID.randomUUID().toString().replaceAll("-","");

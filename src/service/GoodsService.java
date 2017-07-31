@@ -96,7 +96,7 @@ public class GoodsService
 
 	public HashMap<String, Boolean> validate(Goods goods)
 	{
-		HashMap<String, Boolean> map=new HashMap<String, Boolean>();
+		HashMap<String, Boolean> map= new HashMap<>();
 		// 商品名错误
 		if(goods.getGoodName()==null||goods.getGoodName().trim().length()<2
 				||goods.getGoodName().trim().length()>16)

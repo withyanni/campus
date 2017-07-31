@@ -1,25 +1,18 @@
 package controller;
 
-import java.util.Date;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
 import pojo.User;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import service.UserService;
 import utils.campus;
 import utils.yanni;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author yanni
@@ -77,7 +70,6 @@ public class UserController
 	@ResponseBody
 	public campus login(@RequestBody User user)
 	{
-		User s;
 		if(user.getUserName()==null||user.getUserPassword()==null)
 		{
 			return new campus(400,null);
@@ -123,11 +115,9 @@ public class UserController
 	@RequestMapping ("/isLogined")
 	public campus isLogined(String token)
 	{
-		jedis=jedisPool.getResource();
-		String userName=jedis.get("token:"+token);
-		jedis.close();
-		if(userName==null)
-			return new campus(400,null);
-		return new campus(200,null);
+		String userName=userService.isLogined("token:"+token);
+		if(userName==null||userName.trim().equals(""))
+			return new campus(200,false);
+		return new campus(200,userName);
 	}
 }

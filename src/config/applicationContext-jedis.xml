@@ -59,6 +59,7 @@
 	<bean
 		id="redisClient"
 		class="redis.clients.jedis.JedisPool">
+
 		<constructor-arg
 			name="host"
 			value="192.168.91.128"></constructor-arg>
@@ -71,7 +72,7 @@
 	</bean>
 	<bean
 		id="jedisClient"
-		class="redis.clients.jedis.Jedis " />
+		class="redis.clients.jedis.Jedis" />
 
 
 	<!-- jedis集群版配置 -->

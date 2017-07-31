@@ -1,12 +1,13 @@
 package service;
 
-import java.util.HashMap;
-
+import dao.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import dao.UserMapper;
 import pojo.User;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+
+import java.util.HashMap;
 
 /**
  * @author yanni
@@ -17,6 +18,10 @@ public class UserService
 {
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private Jedis jedis;
+	@Autowired
+	private JedisPool jedisPool;
 
 	public HashMap<String, String> validate(User user)
 	{
@@ -67,5 +72,11 @@ public class UserService
 	public boolean usernameCanUse(String userName)
 	{
 		return userMapper.usernameCanUse(userName)==0;
+	}
+
+	public String isLogined(String token) {
+		jedis=jedisPool.getResource();
+		String userName=jedis.get("token:"+token);
+		return userName;
 	}
 }
